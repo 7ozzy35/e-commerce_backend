@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Ticaret Ürün Yönetimi</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Ana stil tanımlamaları */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header stilleri */
+    .header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      margin: 0;
+      padding: 0 20px;
+      font-size: 24px;
+    }
+
+    /* Panel stilleri */
+    .admin-panel {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+    }
+
+    /* Form stilleri */
+    .product-form-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #product-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+    }
+
+    .submit-btn {
+      background-color: #2ecc71;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #27ae60;
+    }
+
+    /* Ürün listesi stilleri */
+    .products-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    #search-bar {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .product-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .product-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .product-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-info h3 {
+      margin: 0 0 10px 0;
+      color: #2c3e50;
+    }
+
+    .product-meta {
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 8px;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .edit-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .edit-btn:hover, .delete-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Stok durumu göstergeleri */
+    .stock-status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .in-stock {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .low-stock {
+      background-color: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .out-of-stock {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    /* Hata mesajları için stiller */
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    /* Modal stilleri */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .close {
+      float: right;
+      cursor: pointer;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>E-Ticaret Ürün Yönetim Paneli</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="admin-panel">
+      <aside class="product-form-container">
+        <h2>Yeni Ürün Ekle</h2>
+        <form id="product-form">
+          <div class="form-group">
+            <label for="name">Ürün Adı</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Ürün Açıklaması</label>
+            <input type="text" id="description" name="description" required>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Fiyat (TL)</label>
+            <input type="number" id="price" name="price" required min="0" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label for="inventory">Stok Adedi</label>
+            <input type="number" id="inventory" name="inventory" required min="0">
+          </div>
+
+          <button type="submit" class="submit-btn">Ürünü Kaydet</button>
+        </form>
+      </aside>
+
+      <main class="products-container">
+        <div class="search-container">
+          <input type="text" id="search-bar" placeholder="Ürün ara..." oninput="searchProducts()">
+        </div>
+
+        <div class="product-list" id="product-list"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Düzenleme Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditModal()">&times;</span>
+      <h2>Ürün Düzenle</h2>
+      <form id="edit-form">
+        <input type="hidden" id="edit-id">
+        <div class="form-group">
+          <label for="edit-name">Ürün Adı</label>
+          <input type="text" id="edit-name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-description">Açıklama</label>
+          <input type="text" id="edit-description" name="description" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-price">Fiyat</label>
+          <input type="number" id="edit-price" name="price" required min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="edit-inventory">Stok</label>
+          <input type="number" id="edit-inventory" name="inventory" required min="0">
+        </div>
+        <button type="submit" class="submit-btn">Güncelle</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let products = [];
+    const API_URL = 'http://localhost:3000';
+
+    function getStockStatus(inventory) {
+      if (inventory <= 0) return ['Stokta Yok', 'out-of-stock'];
+      if (inventory <= 10) return ['Stok Azalıyor', 'low-stock'];
+      return ['Stokta Var', 'in-stock'];
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency: 'TRY'
+      }).format(price);
+    }
+
+    async function fetchProducts() {
+      try {
+        const response = await axios.get(`${API_URL}/api/product`);
+        if (response.data.success) {
+          products = response.data.data;
+          displayProducts(products);
+        }
+      } catch (error) {
+        const productListContainer = document.getElementById('product-list');
+        productListContainer.innerHTML = `
+          <div class="error-message">
+            <h3>Hata Sebebi:</h3>
+            <p>Sunucu bağlantısı sağlanamadı. Lütfen şunları kontrol edin:</p>
+            <ul>
+              <li>Sunucunun çalışır durumda olduğundan</li>
+              <li>API_URL'nin doğru yapılandırıldığından</li>
+              <li>İnternet bağlantınızın aktif olduğundan</li>
+            </ul>
+            <p>Teknik Detay: ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function displayProducts(productList) {
+      const productListContainer = document.getElementById('product-list');
+      if (!productList || productList.length === 0) {
+        productListContainer.innerHTML = `
+          <div class="error-message">
+            <h3>Bilgi:</h3>
+            <p>Henüz ürün bulunmuyor.</p>
+          </div>
+        `;
+        return;
+      }
+
+      productListContainer.innerHTML = productList.map(product => {
+        const [stockText, stockClass] = getStockStatus(product.inventory);
+        return `
+          <div class="product-item">
+            <div class="product-info">
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+              <div class="product-meta">
+                <span>Fiyat: ${formatPrice(product.price)}</span>
+                <span class="stock-status ${stockClass}">${stockText}</span>
+              </div>
+            </div>
+            <div class="button-container">
+              <button class="edit-btn" onclick="openEditModal(${product.id})">Düzenle</button>
+              <button class="delete-btn" onclick="deleteProduct(${product.id})">Sil</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('product-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      try {
+        const formData = new FormData(event.target);
+        const productData = Object.fromEntries(formData.entries());
+        
+        const response = await axios.post(`${API_URL}/api/product`, productData);
+        if (response.data.success) {
+          fetchProducts();
+          event.target.reset();
+        }
+      } catch (error) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+          <h3>Hata Sebebi:</h3>
+          <p>Ürün eklenirken bir hata oluştu:</p>
+          <p>Teknik Detay: ${error.message}</p>
+        `;
+        event.target.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 3000);
+      }
+    });
+
+    function openEditModal(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById('edit-id').value = product.id;
+      document.getElementById('edit-name').value = product.name;
+      document.getElementById('edit-description').value = product.description;
+      document.getElementById('edit-price').value = product.price;
+      document.getElementById('edit-inventory').value = product.inventory;
+
+      document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    document.getElementById('edit-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const id = document.getElementById('edit-id').value;
+      try {
+        const formData = new FormData(event.target);
+        const productData = Object.fromEntries(formData.entries());
+        
+        const response = await axios.put(`${API_URL}/api/product/${id}`, productData);
+        if (response.data.success) {
+          closeEditModal();
+          fetchProducts();
+        }
+      } catch (error) {
+        alert('Güncelleme sırasında bir hata oluştu: ' + error.message);
+      }
+    });
+
+    async function deleteProduct(id) {
+      if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return;
+      
+      try {
+        const response = await axios.delete(`${API_URL}/api/product/${id}`);
+        if (response.data.success) {
+          fetchProducts();
+        }
+      } catch (error) {
+        alert('Silme işlemi sırasında bir hata oluştu: ' + error.message);
+      }
+    }
+
+    function searchProducts() {
+      const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+      const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.description.toLowerCase().includes(searchTerm)
+      );
+      displayProducts(filteredProducts);
+    }
+
+    // Sayfa yüklendiğinde
+    fetchProducts();
+  </script>
+</body>
+</html>
