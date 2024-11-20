@@ -38,7 +38,7 @@
     /* Panel stilleri */
     .admin-panel {
       display: grid;
-      grid-template-columns: 250px 1fr 275px; /* Sağ panel 1.5 katına çıkarıldı (250px * 1.5 = 375px) */
+      grid-template-columns: 250px 1fr 375px; 
       gap: 2rem;
     }
 
@@ -85,10 +85,10 @@
     /* Form stilleri */
     .product-form-container {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 15px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      max-height: 60vh; /* Yükseklik yarıya düşürüldü */
+      max-height: 90vh; /* Yükseklik yarıya düşürüldü */
       overflow-y: auto; /* İçerik taşarsa scroll ekle */
     }
 
@@ -109,14 +109,14 @@
       color: #2c3e50;
     }
 
-    .form-group input {
+    .form-group input, .form-group select {
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 14px;
     }
 
-    .form-group input:focus {
+    .form-group input:focus, .form-group select:focus {
       outline: none;
       border-color: #3498db;
       box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
@@ -390,6 +390,28 @@
             <input type="number" id="inventory" name="inventory" required min="0">
           </div>
 
+          <div class="form-group">
+            <label for="color">Renk</label>
+            <select id="color" name="color" required>
+              <option value="red">Kırmızı</option>
+              <option value="blue">Mavi</option>
+              <option value="green">Yeşil</option>
+              <option value="yellow">Sarı</option>
+              <option value="black">Siyah</option>
+              <option value="white">Beyaz</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="size">Beden</label>
+            <select id="size" name="size" required>
+              <option value="small">Küçük</option>
+              <option value="medium">Orta</option>
+              <option value="large">Büyük</option>
+              <option value="x-large">Çok Büyük</option>
+            </select>
+          </div>
+
           <button type="submit" class="submit-btn">Ürünü Kaydet</button>
         </form>
       </aside>
@@ -400,6 +422,8 @@
             <option value="name">Ürün Adı</option>
             <option value="category">Kategori</option>
             <option value="price">Fiyat</option>
+            <option value="color">Renk</option>
+            <option value="size">Beden</option>
           </select>
           <input type="text" id="search-bar" placeholder="Ürün ara..." oninput="searchProducts()">
         </div>
@@ -448,6 +472,29 @@
       <div class="form-group">
         <label for="edit-inventory">Stok</label>
         <input type="number" id="edit-inventory" name="inventory" required min="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="edit-color">Renk</label>
+        <select id="edit-color" name="color" required>
+
+          <option value="red">Kırmızı</option>
+          <option value="blue">Mavi</option>
+          <option value="green">Yeşil</option>
+          <option value="yellow">Sarı</option>
+          <option value="black">Siyah</option>
+          <option value="white">Beyaz</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-size">Beden</label>
+        <select id="edit-size" name="size" required>
+          <option value="small">Küçük</option>
+          <option value="medium">Orta</option>
+          <option value="large">Büyük</option>
+          <option value="x-large">Çok Büyük</option>
+        </select>
       </div>
       
       <button type="submit" class="submit-btn">Güncelle</button>
@@ -522,6 +569,8 @@
                 <span>Fiyat: ${formatPrice(product.price)}</span>
                 <span class="category-badge">${product.category || 'Kategorisiz'}</span>
                 <span class="stock-count">Stok: ${product.inventory} adet</span>
+                <span class="stock-count">Renk: ${product.color} </span>
+                <span class="stock-count">Beden: ${product.size} </span>
                 <span class="stock-status ${stockClass}">${stockText}</span>
               </div>
             </div>
