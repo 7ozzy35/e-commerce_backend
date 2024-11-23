@@ -377,7 +377,13 @@
 
           <div class="form-group">
             <label for="category">Kategori</label>
-            <input type="text" id="category" name="category" required>
+            <select id="category" name="category" required>
+              <option value="electronics">Elektronik</option>
+              <option value="clothing">Giyim</option>
+              <option value="books">Kitaplar</option>
+              <option value="toys">Oyuncaklar</option>
+              <option value="sports">Spor</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -405,10 +411,10 @@
           <div class="form-group">
             <label for="size">Beden</label>
             <select id="size" name="size" required>
-              <option value="small">Küçük</option>
-              <option value="medium">Orta</option>
-              <option value="large">Büyük</option>
-              <option value="x-large">Çok Büyük</option>
+              <option value="SMALL">Küçük</option>
+              <option value="MEDİUM">Orta</option>
+              <option value="LARGE">Büyük</option>
+              <option value="X-LARGE">Çok Büyük</option>
             </select>
           </div>
 
@@ -462,7 +468,13 @@
       <!-- Kategori düzenleme alanı -->
       <div class="form-group">
         <label for="edit-category">Kategori</label>
-        <input type="text" id="edit-category" name="category" required>
+        <select id="edit-category" name="category" required>
+          <option value="electronics">Elektronik</option>
+          <option value="clothing">Giyim</option>
+          <option value="books">Kitaplar</option>
+          <option value="toys">Oyuncaklar</option>
+          <option value="sports">Spor</option>
+        </select>
       </div>
       
       <div class="form-group">
@@ -490,10 +502,10 @@
       <div class="form-group">
         <label for="edit-size">Beden</label>
         <select id="edit-size" name="size" required>
-          <option value="small">Küçük</option>
-          <option value="medium">Orta</option>
-          <option value="large">Büyük</option>
-          <option value="x-large">Çok Büyük</option>
+          <option value="SMALL">Küçük</option>
+          <option value="MEDİUM">Orta</option>
+          <option value="LARGE">Büyük</option>
+          <option value="X-LARGE">Çok Büyük</option>
         </select>
       </div>
       
@@ -610,6 +622,7 @@
                       <button class="quantity-btn" onclick="updateCart(${product.id}, -1)">-</button>
                       <input type="number" class="quantity-input" value="${quantity}" 
                         min="0" max="${product.inventory}" 
+                        
                         onchange="setCartQuantity(${product.id}, this.value)">
                       <button class="quantity-btn" onclick="updateCart(${product.id}, 1)">+</button>
                     </div>
@@ -638,7 +651,9 @@
           description: productData.description,
           category: productData.category,
           price: productData.price,
-          stock: productData.inventory
+          stock: productData.inventory,
+          size: productData.size,
+          color: productData.color
         });
         
         if (response.data.success) {
@@ -667,6 +682,8 @@
       document.getElementById('edit-description').value = product.description;
       document.getElementById('edit-category').value = product.category;
       document.getElementById('edit-price').value = product.price;
+      document.getElementById('edit-color').value = product.color;
+      document.getElementById('edit-size').value = product.size;
       document.getElementById('edit-inventory').value = product.inventory;
 
       document.getElementById('editModal').style.display = 'block';
@@ -688,7 +705,10 @@
           description: productData.description,
           category: productData.category,
           price: productData.price,
-          stock: productData.inventory
+          stock: productData.inventory,
+          color: productData.color,
+          size: productData.size,
+         
         });
         
         if (response.data.success) {

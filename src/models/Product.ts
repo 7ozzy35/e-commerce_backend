@@ -13,8 +13,8 @@ export class Product {
   @Column()
   description: string = '';
 
-  @Column()
-  category: string = '';
+  @Column({ nullable: true })
+  category?: string = '';
 
   @Column('decimal', { precision: 10, scale: 2 })
   price: number = 0.0;

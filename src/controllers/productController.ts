@@ -5,7 +5,7 @@ import { Product } from '../models/Product';
 // CREATE - Yeni ürün oluştur
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, stock, color, size } = req.body;
+    const { name, description, price, stock, color, size, category } = req.body;
     const product = new Product();
     product.name = name;
     product.description = description;
@@ -13,6 +13,7 @@ export const createProduct = async (req: Request, res: Response) => {
     product.inventory = stock;
     product.color = color;
     product.size = size;
+    product.category = category;
 
     const result = await AppDataSource.manager.save(product);
     res.status(201).json({ success: true, data: result });
@@ -52,7 +53,7 @@ export const getProductById = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, description, price, stock, color, size } = req.body;
+    const { name, description, price, stock, color, size, category } = req.body;
 
     const product = await AppDataSource.manager.findOne(Product, { where: { id } });
 
@@ -67,6 +68,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     product.inventory = stock || product.inventory;
     product.color = color || product.color;
     product.size = size || product.size;
+    product.category = category || product.category;
 
     const result = await AppDataSource.manager.save(product);
     res.json({ success: true, data: result });
