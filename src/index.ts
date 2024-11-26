@@ -22,7 +22,7 @@ app.get('/', (_req, res) => {
 });
 
 // API Routes
-app.use('/product', productRoutes);
+app.use('/api', productRoutes);
 
 // Sunucuyu başlat
 const PORT = process.env.PORT || 3000;
