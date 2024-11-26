@@ -15,6 +15,7 @@ export const createProduct = async (req: Request, res: Response) => {
     product.size = size;
     product.category = category;
 
+    // Ürün veritabanına kaydediliyor
     const result = await AppDataSource.manager.save(product);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
@@ -25,6 +26,7 @@ export const createProduct = async (req: Request, res: Response) => {
 // READ - Tüm ürünleri getir
 export const getProducts = async (_req: Request, res: Response) => {
   try {
+    // Tüm ürünler veritabanından çekiliyor
     const products = await AppDataSource.manager.find(Product);
     res.json({ success: true, data: products });
   } catch (error) {
@@ -36,6 +38,7 @@ export const getProducts = async (_req: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
+    // Belirli bir ürün veritabanından çekiliyor
     const product = await AppDataSource.manager.findOne(Product, { where: { id } });
 
     if (!product) {
@@ -55,6 +58,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { name, description, price, stock, color, size, category } = req.body;
 
+    // Güncellenecek ürün veritabanından çekiliyor
     const product = await AppDataSource.manager.findOne(Product, { where: { id } });
 
     if (!product) {
@@ -70,6 +74,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     product.size = size || product.size;
     product.category = category || product.category;
 
+    // Ürün güncelleniyor ve veritabanına kaydediliyor
     const result = await AppDataSource.manager.save(product);
     res.json({ success: true, data: result });
   } catch (error) {
@@ -81,6 +86,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
+    // Silinecek ürün veritabanından çekiliyor
     const product = await AppDataSource.manager.findOne(Product, { where: { id } });
 
     if (!product) {
@@ -88,6 +94,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
       return;
     }
 
+    // Ürün veritabanından kaldırılıyor
     await AppDataSource.manager.remove(product);
     res.json({ success: true, message: 'Ürün başarıyla silindi' });
   } catch (error) {
