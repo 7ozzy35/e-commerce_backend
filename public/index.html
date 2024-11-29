@@ -393,6 +393,21 @@
       border-radius: 4px;
       text-align: center;
     }
+
+    .clear-cart-btn {
+      background-color: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .clear-cart-btn:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 <body>
@@ -497,6 +512,7 @@
 
       <aside class="cart-container">
         <h2>Alışveriş Sepeti</h2>
+        <button class="clear-cart-btn" onclick="clearCart()">Sepeti Temizle</button>
         <div id="cart-items"></div>
         <div class="cart-total">
           <span>Toplam:</span>
@@ -744,6 +760,7 @@
                 <div class="cart-item-info">
                   <div class="cart-item-name">${product.name}</div>
                   <div class="cart-item-price">
+                    <div>Beden: ${product.size}</div>
                     <div class="quantity-controls">
                       <button class="quantity-btn" onclick="updateCart(${product.id}, -1)">-</button>
                       <input type="number" class="quantity-input" value="${quantity}" 
@@ -763,6 +780,14 @@
       
       cartItemsContainer.innerHTML = cartHTML || '<p>Sepetiniz boş</p>';
       document.getElementById('cart-total-price').textContent = formatPrice(totalPrice);
+    }
+
+    function clearCart() {
+      if (confirm('Sepeti temizlemek istediğinizden emin misiniz?')) {
+        cart = {};
+        updateCartDisplay();
+        displayProducts(products);
+      }
     }
 
     document.getElementById('product-form').addEventListener('submit', async function(event) {
