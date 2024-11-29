@@ -16,7 +16,7 @@
     }
 
     .container {
-      max-width: 1400px; /* Genişletildi */
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -40,6 +40,48 @@
       display: grid;
       grid-template-columns: 250px 1fr 375px; 
       gap: 2rem;
+    }
+
+    /* Kategori sekmesi stilleri */
+    .categories-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .categories-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .categories-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .category-button {
+      padding: 8px 16px;
+      background-color: #e3f2fd;
+      color: #1565c0;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category-button:hover {
+      background-color: #1565c0;
+      color: white;
+    }
+
+    .category-button.active {
+      background-color: #1565c0;
+      color: white;
     }
 
     /* Sepet stilleri */
@@ -88,8 +130,8 @@
       padding: 10px;
       border-radius: 15px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      max-height: 90vh; /* Yükseklik yarıya düşürüldü */
-      overflow-y: auto; /* İçerik taşarsa scroll ekle */
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     #product-form {
@@ -170,7 +212,7 @@
 
     .product-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
     }
 
@@ -179,7 +221,7 @@
       border-radius: 8px;
       padding: 20px;
       display: flex;
-      flex-direction: column; /* Değiştirildi */
+      flex-direction: column;
       gap: 15px;
       transition: transform 0.2s;
     }
@@ -203,16 +245,16 @@
       color: #7f8c8d;
       font-size: 14px;
       display: flex;
-      flex-direction: column; /* Değiştirildi */
+      flex-direction: column;
       gap: 10px;
     }
 
     .button-container {
       display: flex;
-      flex-wrap: wrap; /* Değiştirildi */
+      flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-      margin-top: auto; /* Alt kısma sabitlendi */
+      margin-top: auto;
     }
 
     .edit-btn, .delete-btn, .add-to-cart-btn {
@@ -222,7 +264,7 @@
       font-weight: 500;
       cursor: pointer;
       transition: opacity 0.3s;
-      flex: 1; /* Butonlar eşit genişlikte */
+      flex: 1;
     }
 
     .edit-btn {
@@ -321,7 +363,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      width: 100%; /* Genişletildi */
+      width: 100%;
     }
 
     .quantity-btn {
@@ -377,12 +419,13 @@
 
           <div class="form-group">
             <label for="category">Kategori</label>
-            <select id="category" name="category" required>
-              <option value="electronics">Elektronik</option>
-              <option value="clothing">Giyim</option>
-              <option value="books">Kitaplar</option>
-              <option value="toys">Oyuncaklar</option>
-              <option value="sports">Spor</option>
+            <select id="category" name="category" required onchange="updateSizeOptions()">
+              <option value="" disabled selected>Lütfen bir kategori seçin</option>
+              <option value="Electronics">Elektronik</option>
+              <option value="Clothing">Giyim</option>
+              <option value="Books">Kitaplar</option>
+              <option value="Toys">Oyuncaklar</option>
+              <option value="Sports">Spor</option>
             </select>
           </div>
 
@@ -399,18 +442,20 @@
           <div class="form-group">
             <label for="color">Renk</label>
             <select id="color" name="color" required>
-              <option value="red">Kırmızı</option>
-              <option value="blue">Mavi</option>
-              <option value="green">Yeşil</option>
-              <option value="yellow">Sarı</option>
-              <option value="black">Siyah</option>
-              <option value="white">Beyaz</option>
+                <option value="" disabled selected>Lütfen bir renk seçin</option>
+                <option value="Red">Kırmızı</option>
+                <option value="Blue">Mavi</option>
+                <option value="Green">Yeşil</option>
+                <option value="Yellow">Sarı</option>
+                <option value="Black">Siyah</option>
+                <option value="White">Beyaz</option>
             </select>
-          </div>
+        </div>
 
           <div class="form-group">
             <label for="size">Beden</label>
             <select id="size" name="size" required>
+              <option value="" disabled selected>Lütfen bir beden seçin</option>
               <option value="SMALL">Küçük</option>
               <option value="MEDİUM">Orta</option>
               <option value="LARGE">Büyük</option>
@@ -432,6 +477,19 @@
             <option value="size">Beden</option>
           </select>
           <input type="text" id="search-bar" placeholder="Ürün ara..." oninput="searchProducts()">
+        </div>
+
+        <div class="categories-container">
+          <h2 class="categories-title">Kategoriler</h2>
+          <div class="categories-list" id="categories-list">
+            <button class="category-button active" onclick="filterByCategory('all')">Tümü</button>
+            <button class="category-button" onclick="filterByCategory('Electronics')">Elektronik</button>
+            <button class="category-button" onclick="filterByCategory('Clothing')">Giyim</button>
+            <button class="category-button" onclick="filterByCategory('Stationery')">Kitap/Kırtasiye</button>
+            <button class="category-button" onclick="filterByCategory('Accessories')">Aksesuar</button>
+            <button class="category-button" onclick="filterByCategory('Toys')">Oyuncaklar</button>
+            <button class="category-button" onclick="filterByCategory('Sports')">Spor</button>
+          </div>
         </div>
 
         <div class="product-list" id="product-list"></div>
@@ -489,13 +547,12 @@
       <div class="form-group">
         <label for="edit-color">Renk</label>
         <select id="edit-color" name="color" required>
-
-          <option value="red">Kırmızı</option>
-          <option value="blue">Mavi</option>
-          <option value="green">Yeşil</option>
-          <option value="yellow">Sarı</option>
-          <option value="black">Siyah</option>
-          <option value="white">Beyaz</option>
+          <option value="Red">Kırmızı</option>
+          <option value="Blue">Mavi</option>
+          <option value="Green">Yeşil</option>
+          <option value="Yellow">Sarı</option>
+          <option value="Black">Siyah</option>
+          <option value="White">Beyaz</option>
         </select>
       </div>
 
@@ -518,6 +575,62 @@
     let products = [];
     let cart = {};
     const API_URL = 'http://localhost:3000';
+    let currentCategory = 'all';
+
+    function updateSizeOptions() {
+      const categorySelect = document.getElementById('category');
+      const sizeSelect = document.getElementById('size');
+      
+      if (categorySelect.value === 'Electronics') {
+        sizeSelect.innerHTML = `
+          <option value="1.5">1.5 inç</option>
+          <option value="4">4 inç</option>
+          <option value="6.5">6.5 inç</option>
+          <option value="8">8 inç</option>
+          <option value="12">12 inç</option>
+          <option value="15.6">15.6 inç</option>
+          <option value="24">24 inç</option>
+          <option value="32">32 inç</option>
+          <option value="50">50 inç</option>
+          <option value="75">75 inç</option>
+        `;
+        
+      } 
+       else if (categorySelect.value === 'Clothing') {
+        sizeSelect.innerHTML = `
+         <option value="Çok Küçük -XS">XS</option>
+    <option value="Küçük -S">S</option>
+    <option value="Orta -M">M</option>
+    <option value="Büyük -L">L</option>
+    <option value="Çok Büyük -XL">XL</option>
+    <option value="Oversize -XXL">XXL</option>
+    <!-- Pantolon bedenleri -->
+    <option value="26">26</option>
+    <option value="27">27</option>
+    <option value="28">28</option>
+    <option value="29">29</option>
+    <option value="30">30</option>
+    <option value="31">31</option>
+    <option value="32">32</option>
+    <option value="33">33</option>
+    <option value="34">34</option>
+    <option value="35">35</option>
+    <option value="36">36</option>
+    <option value="37">37</option>
+    <option value="38">38</option>
+         
+        `;
+        
+      }
+      else {
+        sizeSelect.innerHTML = `
+          <option value="SMALL">Küçük</option>
+          <option value="MEDİUM">Orta</option>
+          <option value="LARGE">Büyük</option>
+          <option value="X-LARGE">Çok Büyük</option>
+        `;
+      }
+    }
 
     function getStockStatus(inventory) {
       if (inventory <= 0) return ['Stokta Yok', 'out-of-stock'];
@@ -530,6 +643,19 @@
         style: 'currency',
         currency: 'TRY'
       }).format(price);
+    }
+
+    function filterByCategory(category) {
+      currentCategory = category;
+      const buttons = document.querySelectorAll('.category-button');
+      buttons.forEach(button => button.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const filteredProducts = category === 'all' 
+        ? products 
+        : products.filter(product => product.category === category);
+      
+      displayProducts(filteredProducts);
     }
 
     async function fetchProducts() {
@@ -622,7 +748,6 @@
                       <button class="quantity-btn" onclick="updateCart(${product.id}, -1)">-</button>
                       <input type="number" class="quantity-input" value="${quantity}" 
                         min="0" max="${product.inventory}" 
-                        
                         onchange="setCartQuantity(${product.id}, this.value)">
                       <button class="quantity-btn" onclick="updateCart(${product.id}, 1)">+</button>
                     </div>
@@ -773,7 +898,15 @@
       const searchType = document.getElementById('search-type').value;
       const searchTerm = document.getElementById('search-bar').value.toLowerCase();
       
-      const filteredProducts = products.filter(product => {
+      let filteredProducts = products;
+      
+      // Önce kategori filtresini uygula
+      if (currentCategory !== 'all') {
+        filteredProducts = filteredProducts.filter(product => product.category === currentCategory);
+      }
+      
+      // Sonra arama filtresini uygula
+      filteredProducts = filteredProducts.filter(product => {
         switch(searchType) {
           case 'name':
             return product.name.toLowerCase().includes(searchTerm) ||
